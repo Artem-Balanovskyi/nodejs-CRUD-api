@@ -19,6 +19,13 @@ class UsersModel {
     });
   }
 
+  getUserById(id: string): Promise<IUser | undefined> {
+    return new Promise((resolve) => {
+      const foundUser = this.users.find((user) => user.id === id);
+      resolve(foundUser);
+    });
+  }
+
 }
 
 export const userModel = new UsersModel();

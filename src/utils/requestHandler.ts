@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { ErrorMessages, endpoint, headers } from '../utils/constants';
 import { UsersController } from '../controllers/usersController';
 import { sendResponse } from '../utils/sendResponse';
-import { isValidUser } from './validationChecks';
+import { isValidUser, isValidUserId } from './validationChecks';
 
 export class RequestHandler {
   endpoint = endpoint;
@@ -25,10 +25,15 @@ export class RequestHandler {
 
     if (method === 'GET') {
       if (url === this.endpoint) {
-        this.usersController.getUsers(req, res)
+        this.usersController.getAllUsers(req, res)
           .then(() => { });
       } else {
-        sendInvalidEndpointResponse();
+        const id = url?.split('/').pop();
+        if (!id || !isValidUserId(id)) {
+          sendResponse(req, res, 400, this.headers, {
+            message: ErrorMessages.invalidUuid,
+          });
+        } else this.usersController.getUserById(req, res, id).then(() => {});
       }
     }
 

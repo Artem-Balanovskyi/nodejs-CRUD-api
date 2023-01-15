@@ -1,6 +1,6 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage as IncMsg, ServerResponse as ServResp} from 'http';
 import { userModel } from '../models/usersModel';
-import { headers } from '../utils/constants';
+import { ErrorMessages, headers } from '../utils/constants';
 import { sendResponse } from '../utils/sendResponse';
 import { IUser } from 'src/interfaces/userInterface';
 
@@ -9,7 +9,7 @@ export class UsersController {
 
   headers = headers;
 
-  getUsers = async (req: IncomingMessage, res: ServerResponse) => {
+  getAllUsers = async (req: IncMsg, res: ServResp) => {
     try {
       const users = await this.usersModel.getAllUsers();
       sendResponse(req, res, 200, this.headers, users);
@@ -20,11 +20,7 @@ export class UsersController {
     }
   }
 
-  addUser = async (
-    req: IncomingMessage,
-    res: ServerResponse,
-    user: IUser,
-  ) => {
+  addUser = async (req: IncMsg, res: ServResp, user: IUser) => {
     try {
       const newUser = (await this.usersModel.addUser(user)) as IUser;
       sendResponse(req, res, 201, this.headers, newUser);
@@ -32,7 +28,25 @@ export class UsersController {
       sendResponse(req, res, 500, this.headers, {
         message: 'Error during addUser',
       });
-    }
+    } 
   }
+
+  getUserById = async (req: IncMsg, res: ServResp, id: string) => {
+    try {
+      const user = (await this.usersModel.getUserById(id)) as IUser;
+      if (user) {
+        sendResponse(req, res, 200, this.headers, user);
+      } else {
+        sendResponse(req, res, 404, this.headers, {
+          message: ErrorMessages.userNotFound,
+        });
+      }
+    } catch (err) {
+      sendResponse(req, res, 500, this.headers, {
+        message: 'Error during getUser',
+      });
+    }
+  };
+
 
 }
