@@ -42,6 +42,21 @@ class UsersModel {
     })
   }
 
+  deleteUser(id: string): Promise<number> {
+    return new Promise((resolve) => {
+      const userIdx = this.users.findIndex((user) => user.id === id);
+      if (userIdx === -1) {
+        resolve(404);
+      } else {
+        this.users = [
+          ...this.users.slice(0, userIdx),
+          ...this.users.slice(userIdx + 1),
+        ];
+        resolve(204);
+      }
+    });
+  }
+
 }
 
 export const userModel = new UsersModel();
