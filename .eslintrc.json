@@ -23,8 +23,5 @@
     "plugins": [
         "@typescript-eslint",
         "import"
-    ],
-    "root": true,
-    "rules": {
-    }
+    ]
 }
