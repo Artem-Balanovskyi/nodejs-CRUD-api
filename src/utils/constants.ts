@@ -7,4 +7,3 @@ export enum ErrorMessages {
 export const endpoint = '/api/users';
 
 export const headers = { 'Content-Type': 'application/json' };
-

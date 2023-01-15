@@ -2,14 +2,24 @@ import { IncomingMessage } from 'http';
 import { EOL } from 'os';
 
 export const showRequestStatus = (req: IncomingMessage, statusCode: number) => {
-  let coloredStatusCode = `\x1b[31m${statusCode}\x1b[0m`;
-  if (Math.floor(statusCode / 100) === 2) {
-    coloredStatusCode = `\x1b[32m${statusCode}\x1b[0m`;
+  
+  let coloredStatusCode = '';
+
+  const getColoredStatusCode = (colorNumber: number): string => {
+    return coloredStatusCode = `\x1b[${colorNumber}m${statusCode}\x1b[0m`;
   }
-  if (Math.floor(statusCode / 100) === 4) {
-    coloredStatusCode = `\x1b[33m${statusCode}\x1b[0m`;
+
+  coloredStatusCode = getColoredStatusCode(31);
+
+  if (statusCode.toString().startsWith('2')) {
+    getColoredStatusCode(32);
   }
+
+  if (statusCode.toString().startsWith('4')) {
+    getColoredStatusCode(33);
+  }
+
   process.stdout.write(
     `${req.method} ${req.url} ${coloredStatusCode}${EOL}`,
-  );
-};
+  )
+}
