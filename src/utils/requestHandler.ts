@@ -1,4 +1,4 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage as IncMsg, ServerResponse as ServResp } from 'http';
 import { ErrorMessages, endpoint, headers } from '../utils/constants';
 import { UsersController } from '../controllers/usersController';
 import { sendResponse } from '../utils/sendResponse';
@@ -9,12 +9,22 @@ export class RequestHandler {
   headers = headers;
   usersController = new UsersController();
   
-  handleReq(req: IncomingMessage, res: ServerResponse) {
+  handleReq(req: IncMsg, res: ServResp) {
     const { method, url } = req;
+    let data = '';
 
     const sendInvalidEndpointResponse = () => {
       sendResponse(req, res, 404, this.headers, {
         message: ErrorMessages.invalidEndpoint,
+      })
+    }
+
+    const addDataToDB = () => {
+      req.on('data', (chunk) => (data += chunk));
+      req.on('error', (err) => {
+        sendResponse(req, res, 500, this.headers, {
+          message: `Error. ${err.message}`
+        })
       })
     }
 
@@ -41,13 +51,9 @@ export class RequestHandler {
       if (url !== this.endpoint) {
         sendInvalidEndpointResponse();
       }
-      let data = '';
-      req.on('data', (chunk) => (data += chunk));
-      req.on('error', (err) => {
-        sendResponse(req, res, 500, this.headers, {
-          message: `Error. ${err.message}`
-        })
-      })
+
+      addDataToDB();
+
       req.on('end', () => {
         const user = JSON.parse(data);
         if (!isValidUser(user)) {
@@ -57,6 +63,30 @@ export class RequestHandler {
         } else {
           this.usersController.addUser(req, res, user)
             .then(() => { });
+        }
+      })
+    }
+
+    if (method === 'PUT') {
+      const id = url?.split('/').pop();
+      if (!id || !isValidUserId(id)) {
+        return sendResponse(req, res, 400, this.headers, { 
+          message: ErrorMessages.invalidUuid 
+        })
+      }
+
+      addDataToDB();
+
+      req.on('end', () => {
+        const user = JSON.parse(data);
+        if (!isValidUser(user)) {
+          sendResponse(req, res, 400, this.headers, {
+            message: ErrorMessages.invalidBody
+          })
+        } else {
+          this.usersController
+            .updateUser(req, res, { id, ...user })
+            .then(() => {});
         }
       })
     }

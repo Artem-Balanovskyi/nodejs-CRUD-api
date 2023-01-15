@@ -1,11 +1,11 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage as IncMsg, ServerResponse as ServResp } from 'http';
 import { IUser } from 'src/interfaces/userInterface';
 import { IErrorMsg } from 'src/interfaces/errorMsgInterface';
 import { showRequestStatus } from './showRequestStatus'; 
 
 export const sendResponse = (
-  req: IncomingMessage,
-  res: ServerResponse,
+  req: IncMsg,
+  res: ServResp,
   statusCode: number,
   headers: Record<string, string>,
   result: IUser | IUser[] | IErrorMsg

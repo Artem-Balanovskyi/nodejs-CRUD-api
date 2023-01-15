@@ -1,7 +1,7 @@
-import { IncomingMessage } from 'http';
+import { IncomingMessage as IncMsg } from 'http';
 import { EOL } from 'os';
 
-export const showRequestStatus = (req: IncomingMessage, statusCode: number) => {
+export const showRequestStatus = (req: IncMsg, statusCode: number) => {
   
   let coloredStatusCode = '';
 
