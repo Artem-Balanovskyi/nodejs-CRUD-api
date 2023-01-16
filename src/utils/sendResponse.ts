@@ -1,6 +1,6 @@
 import { IncomingMessage as IncMsg, ServerResponse as ServResp } from 'http';
-import { IUser } from 'src/interfaces/userInterface';
-import { IErrorMsg } from 'src/interfaces/errorMsgInterface';
+import { IUser } from '../interfaces/userInterface';
+import { IErrorMsg } from '../interfaces/errorMsgInterface';
 import { showRequestStatus } from './showRequestStatus'; 
 
 export const sendResponse = (

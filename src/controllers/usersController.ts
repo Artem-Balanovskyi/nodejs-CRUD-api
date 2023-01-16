@@ -2,7 +2,7 @@ import { IncomingMessage as IncMsg, ServerResponse as ServResp } from 'http';
 import { userModel } from '../models/usersModel';
 import { ErrorMessages, headers } from '../utils/constants';
 import { sendResponse } from '../utils/sendResponse';
-import { IUser } from 'src/interfaces/userInterface';
+import { IUser } from '../interfaces/userInterface';
 import { showRequestStatus } from '../utils/showRequestStatus';
 export class UsersController {
   usersModel = userModel;
