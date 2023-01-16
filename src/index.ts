@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { EOL } from 'os';
 
 
-const port = parseInt(process.env.PORT!) || 5000;
+export const port = parseInt(process.env.PORT!) || 5000;
 const host = 'localhost';
 
 export const server = createServer((req: IncMsg, res: ServResp) => {
@@ -12,8 +12,10 @@ export const server = createServer((req: IncMsg, res: ServResp) => {
   requestHandler.handleReq(req, res);
 })
 
-server.listen(port, () => {
-  process.stdout.write(
-    `Server is running on http://${host}:${port}${EOL}`
-  )
-})
+if (!process.argv.slice(2) || process.argv.slice(2)[0] !== '--multi') {
+  server.listen(port, () => {
+    process.stdout.write(
+      `Server is running on http://${host}:${port}${EOL}`
+    )
+  })
+} 

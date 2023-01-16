@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "RS School Task 3 - CRUD api",
   "main": "./src/index.ts",
-  "type": "module",
   "scripts": {
     "start:dev": "nodemon ./src/index.ts",
     "start:prod": "webpack && node ./dist/index_bundle.cjs",
-    "start:multi": "tsc && node ./dist/index.js --cluster.ts",
+    "start:multi": "nodemon ./src/multi.ts --multi",
     "test": "npx jest --noStackTrace --runInBand"
   },
   "repository": {
